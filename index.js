@@ -1,47 +1,51 @@
-// TODO: Include packages needed for this application
 const generateMarkdown = require("./utils/generateMarkdown");
 const inquirer = require("inquirer");
 const fs = require("fs");
-
-// TODO: Create an array of questions for user input
-//const questions = [];
 
 const formatContent = ({ title, description, install, usage, contributing, test, license, username, email }, badge) =>
 `# ${title}
 ${badge}
 
-## Description
+## Table of Contents
+
+1. [Description](#description)
+2. [Installation](#install)
+3. [Usage Instructions](#usage)
+4. [How to Contribute](#contributing)
+5. [Test Instructions](#test)
+6. [License](#license)
+7. [Questions](#questions)
+
+## <a id="description"></a>Description 
 
 ${description}
 
-## Installation
+## <a id="install"></a>Installation 
 
 ${install}
 
-## Usage Instructions
+## <a id="usage"></a>Usage Instructions 
 
 ${usage}
 
-## How to Contribute
+## <a id="contributing"></a>How to Contribute 
 
 ${contributing}
 
-## Test Instructions
+## <a id="test"></a>Test Instructions 
 
 ${test}
 
-## License
+## <a id="license"></a>License 
 
 ${license}
 
-## Questions
+## <a id="questions"></a>Questions 
 
-Any questions or concerns regarding the project, you can contact me:
+Any questions or concerns regarding the project, you can contact me via my email: ${email}
 
-Via my GitHub: https://github.com/${username}
-Or via my email: ${email}
+For more of my work, visit my GitHub: https://github.com/${username}
 `
-
 
 function askUser() {
     inquirer
@@ -99,19 +103,14 @@ function askUser() {
             const licenseSection = generateMarkdown.renderLicenseSection(response.license, link);
             response.license = licenseSection;
             const markdown = formatContent(response, badge);
-            console.log(markdown);
-        })
+            writeToFile(markdown);
+        });
 }
 
-
-
-// TODO: Create a function to write README file
-function writeToFile(fileName, data) {}
-
-// TODO: Create a function to initialize app
-function init() {
-    askUser();
+function writeToFile(markdown) {
+    fs.writeFile('README.md', markdown, (err) =>
+    err ? console.log(err) : console.log("Success!")
+    );
 }
 
-// Function call to initialize app
-init();
+askUser();
