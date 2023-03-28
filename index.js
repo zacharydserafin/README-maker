@@ -6,17 +6,42 @@ const fs = require("fs");
 // TODO: Create an array of questions for user input
 //const questions = [];
 
-function Project({ title, description, install, usage, contributing, test, license, username, email }) {
-    this.title = title;
-    this.description = description;
-    this.install = install;
-    this.usage = usage;
-    this.contributing = contributing;
-    this.test = test;
-    this.license = license;
-    this.username = username;
-    this.email = email;
-}
+const formatContent = ({ title, description, install, usage, contributing, test, license, username, email }, badge) =>
+`# ${title}
+${badge}
+
+## Description
+
+${description}
+
+## Installation
+
+${install}
+
+## Usage Instructions
+
+${usage}
+
+## How to Contribute
+
+${contributing}
+
+## Test Instructions
+
+${test}
+
+## License
+
+${license}
+
+## Questions
+
+Any questions or concerns regarding the project, you can contact me:
+
+Via my GitHub: https://github.com/${username}
+Or via my email: ${email}
+`
+
 
 function askUser() {
     inquirer
@@ -69,7 +94,12 @@ function askUser() {
             },
         ])
         .then((response) => {
-            const userInfo = new Project(response);
+            const badge = generateMarkdown.renderLicenseBadge(response.license);
+            const link = generateMarkdown.renderLicenseLink(response.license);
+            const licenseSection = generateMarkdown.renderLicenseSection(response.license, link);
+            response.license = licenseSection;
+            const markdown = formatContent(response, badge);
+            console.log(markdown);
         })
 }
 
